@@ -1,0 +1,59 @@
+<template>
+	<div class="slds-card_boundary" style="position: relative;">
+		<div if:true={displaySpinner}>
+			<lightning-spinner alternative-text="Loading" variant="brand" style="position: absolute;">
+			</lightning-spinner>
+		</div>
+		<lightning-card>
+			<h3 slot="title">
+				{label}
+			</h3>
+			<div slot="actions">
+				<template if:true={uploadOption}>
+					<lightning-file-upload
+					label="Upload Files"
+					name="fileUploader"
+					record-id={relatedRecordId}
+					accept={acceptedFormats}
+					onuploadfinished={handleUploadFinished}
+					multiple>
+					</lightning-file-upload>
+				</template>
+			</div>
+			
+			<div slot="footer">
+				<template if:true={files}>
+					<div class="slds-form--compound">
+						<table class="slds-table slds-table--bordered">  
+							<!-- hide the table header if file is empty -->
+							<thead>  
+								<tr>  
+									<th>Title</th>  
+									<th>File Type</th>
+									<template if:true={deleteOption}> 
+										<th>Action</th>
+									</template>                     
+								</tr>  
+							</thead>  
+							<tbody>
+								<template for:each={files} for:item="file">
+									<tr key={file.Id}>  
+										<td>
+											<lightning-button  access-key={file.Id} variant="base" label={file.Title} title={file.Title} onclick={previewFile}></lightning-button>
+										</td>  
+										<td>{file.FileType}</td>  
+										<template if:true={deleteOption}>     
+											<td>
+												<lightning-button-icon onclick={deleteSelectedFile} access-key={file.Id} icon-name="utility:delete"  alternative-text="Delete" title="Delete"></lightning-button-icon>
+											</td>
+										</template>
+									</tr> 
+								</template>
+							</tbody>  
+						</table>
+					</div>
+				</template>
+			</div>
+		</lightning-card>
+	</div>
+</template>
